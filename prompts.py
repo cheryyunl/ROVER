@@ -698,28 +698,28 @@ Evaluate whether the **visual changes** in the generated image correctly demonst
 }}
 """
 
-prompt_reasoning_visual_synthetic = """
-You are a professional AI evaluation specialist with expertise in synthetic reasoning assessment.
+prompt_reasoning_visual_imaginative = """
+You are a professional AI evaluation specialist with expertise in imaginative reasoning assessment.
 
 You will be given:
 1. **Original Image**: the starting point
-2. **Generated Image**: the result after synthetic reasoning
-3. **Task Instruction**: the synthetic reasoning task to perform
+2. **Generated Image**: the result after imaginative reasoning
+3. **Task Instruction**: the imaginative reasoning task to perform
 4. **Dimension**: the knowledge domain (science/humanity/common_sense/logic)
 5. **Keywords**: relevant domain concepts and principles for this task
-6. **Target Description**: expected visual outcomes after synthetic reasoning
+6. **Target Description**: expected visual outcomes after imaginative reasoning
 7. **Target Image** (if available): reference image showing the expected result
 
 Note: Keywords are domain-specific concepts that should be considered or applied in the reasoning. Target Description shows what the final visual outcome should look like, helping you assess if the visual result aligns with expectations. If a Target Image is provided, use it as the primary reference for evaluation; otherwise, rely on the Target Description.
 
 Your Objective:
-Evaluate whether the **visual changes** in the generated image correctly demonstrate synthetic reasoning following domain principles. Focus on comparing the visual result with the expected outcomes.
+Evaluate whether the **visual changes** in the generated image correctly demonstrate imaginative reasoning following domain principles. Focus on comparing the visual result with the expected outcomes.
 
-## Visual Synthetic Logic Principles:
+## Visual Imaginative Logic Principles:
 - **Creative Plausibility**: Visual new/modified objects are realistic and believable
 - **Coherent Integration**: Visual added elements blend naturally with existing scene
 - **Attribute Consistency**: Visual object transformations maintain logical properties
-- **Style Harmonization**: Visual synthetic elements match overall visual style
+- **Style Harmonization**: Visual imaginative elements match overall visual style
 
 ## Domain-Specific Considerations:
 - **Science**: Apply scientific principles and natural laws; verify that reasoning follows established scientific facts and theories; reject unscientific claims or impossible phenomena
@@ -729,12 +729,12 @@ Evaluate whether the **visual changes** in the generated image correctly demonst
 
 ## Evaluation Steps:
 1. **Target Match**: Does the generated image match the target description (and target image if available)?
-2. **Visual Changes Analysis**: What synthetic transformations are visually apparent?
+2. **Visual Changes Analysis**: What imaginative transformations are visually apparent?
 3. **Domain Knowledge Check**: Do visual changes align with keyword-related principles? Ensure visual reasoning follows domain-specific scientific/cultural/commonsense/logical principles; reject violations of established domain knowledge
 4. **Plausibility Validation**: Are visual new/modified objects realistic and logically sound?
 
 ## Evaluation Scale (1 to 5):
-- **5 Perfect Target Match**: Generated image perfectly matches target description (and target image if available) with correct synthetic logic
+- **5 Perfect Target Match**: Generated image perfectly matches target description (and target image if available) with correct imaginative logic
 - **4 Minor Target Gaps**: Most target elements present and correct, with one minor missing or incorrect detail
 - **3 Partial Target Match**: Some target elements present but notable gaps or inaccuracies in matching target description
 - **2 Limited Target Achievement**: Few target elements correctly present, major gaps in target description fulfillment
@@ -752,7 +752,7 @@ Evaluate whether the **visual changes** in the generated image correctly demonst
 3. **Domain Knowledge**: ✔ Color balance achieved perfectly, ✔ Size hierarchy logical, ✔ Accessibility maintained
 4. **Plausibility Validation**: ✔ Arrangement realistic and stable, ✔ All fruits properly positioned
 
-→ **reasoning_visual_score**: 5 (Perfect synthetic reasoning with flawless arrangement)
+→ **reasoning_visual_score**: 5 (Perfect imaginative reasoning with flawless arrangement)
 
 ### Example 2 (Score: 3): Adequate Fruit Platter
 **Task**: "Arrange these various fruits into an attractive fruit platter"
@@ -766,7 +766,7 @@ Evaluate whether the **visual changes** in the generated image correctly demonst
 3. **Domain Knowledge**: ✘ Color balance compromised, ✔ Basic size hierarchy, ✘ Accessibility issues
 4. **Plausibility Validation**: ✘ Some fruits may roll off, ✘ Unstable arrangement
 
-→ **reasoning_visual_score**: 3 (Adequate synthetic reasoning with notable gaps)
+→ **reasoning_visual_score**: 3 (Adequate imaginative reasoning with notable gaps)
 
 ### Example 3 (Score: 1): Failed Fruit Platter
 **Task**: "Arrange these various fruits into an attractive fruit platter"
@@ -780,11 +780,11 @@ Evaluate whether the **visual changes** in the generated image correctly demonst
 3. **Domain Knowledge**: ✘ No color balance, ✘ No size hierarchy, ✘ No accessibility
 4. **Plausibility Validation**: ✘ Completely unrealistic, ✘ Impossible arrangement
 
-→ **reasoning_visual_score**: 1 (Complete failure of synthetic reasoning)
+→ **reasoning_visual_score**: 1 (Complete failure of imaginative reasoning)
 
 ## Input
 **Image 1: Original Image** (the starting point)
-**Image 2: Generated Image** (the result after synthetic reasoning)
+**Image 2: Generated Image** (the result after imaginative reasoning)
 **Image 3: Target Image** (if available, the reference showing expected result)
 **Task Instruction**: {prompt}
 **Dimension**: {dimension}
@@ -798,15 +798,15 @@ Evaluate whether the **visual changes** in the generated image correctly demonst
 }}
 """
 
-prompt_reasoning_process_synthetic = """
-You are a professional AI evaluation specialist with expertise in synthetic reasoning assessment.
+prompt_reasoning_process_imaginative = """
+You are a professional AI evaluation specialist with expertise in imaginative reasoning assessment.
 
 You will be given:
 1. **Original Image**: the starting point
-2. **Task Instruction**: the synthetic reasoning task to perform
+2. **Task Instruction**: the imaginative reasoning task to perform
 3. **Dimension**: the knowledge domain (science/humanity/common_sense/logic)
 4. **Keywords**: relevant domain concepts and principles for this task
-5. **Target Description**: expected visual outcomes after synthetic reasoning
+5. **Target Description**: expected visual outcomes after imaginative reasoning
 6. **Think Output**: the reasoning text generated by the model
 
 Your Objective:
@@ -816,11 +816,11 @@ CRITICAL: If the Think Output is empty, contains only placeholder text, or says 
 
 Note: Keywords are domain-specific concepts that should be considered or applied in the reasoning. Target Description shows what the final visual outcome should look like, helping you assess if the reasoning process is heading in the right direction.
 
-## Synthetic Logic Principles:
+## Imaginative Logic Principles:
 - **Creative Plausibility**: New/modified objects are realistic and believable
 - **Coherent Integration**: Added elements blend naturally with existing scene
 - **Attribute Consistency**: Object transformations maintain logical properties
-- **Style Harmonization**: Synthetic elements match overall visual style
+- **Style Harmonization**: Imaginative elements match overall visual style
 
 ## Domain-Specific Considerations:
 - **Science**: Apply scientific principles and natural laws; verify that reasoning follows established scientific facts and theories; reject unscientific claims or impossible phenomena
@@ -829,17 +829,17 @@ Note: Keywords are domain-specific concepts that should be considered or applied
 - **Logic**: Follow formal reasoning and mathematical principles; ensure logical consistency and mathematical accuracy; reject logical fallacies or mathematical errors
 
 ## Evaluation Steps:
-1. **Identify Synthetic Changes**: What objects were added, modified, or transformed?
-2. **Domain Knowledge Check**: Do synthetic elements follow keyword-related principles and target description? Ensure reasoning follows domain-specific scientific/cultural/commonsense/logical principles; reject violations of established domain knowledge
+1. **Identify Imaginative Changes**: What objects were added, modified, or transformed?
+2. **Domain Knowledge Check**: Do imaginative elements follow keyword-related principles and target description? Ensure reasoning follows domain-specific scientific/cultural/commonsense/logical principles; reject violations of established domain knowledge
 3. **Plausibility Validation**: Are new/modified objects realistic and logically sound?
-4. **Integration Assessment**: Do synthetic elements harmonize with the original scene?
+4. **Integration Assessment**: Do imaginative elements harmonize with the original scene?
 
 ## Evaluation Scale (1 to 5):
-- **5 Perfect Synthetic Logic**: All synthetic elements are plausible, well-integrated, and domain-appropriate
-- **4 Minor Synthetic Issues**: One small implausibility that doesn't break overall coherence
-- **3 Noticeable Synthetic Problems**: Clear logic flaws but general synthesis direction correct
-- **2 Major Synthetic Failures**: Multiple serious errors that undermine creative reasoning
-- **1 Synthetic Logic Breakdown**: Synthetic elements violate fundamental plausibility principles
+- **5 Perfect Imaginative Logic**: All imaginative elements are plausible, well-integrated, and domain-appropriate
+- **4 Minor Imaginative Issues**: One small implausibility that doesn't break overall coherence
+- **3 Noticeable Imaginative Problems**: Clear logic flaws but general synthesis direction correct
+- **2 Major Imaginative Failures**: Multiple serious errors that undermine creative reasoning
+- **1 Imaginative Logic Breakdown**: Imaginative elements violate fundamental plausibility principles
 
 ### Example: Fruit Platter Creation
 **Task**: "Arrange these various fruits into an attractive fruit platter"
@@ -848,7 +848,7 @@ Note: Keywords are domain-specific concepts that should be considered or applied
 **Target Description**: "fruits arranged in an attractive platter with good color distribution and accessibility"
 
 **Evaluation**:
-1. **Synthetic Changes**: ✔ Fruits arranged on platter, ✔ Different varieties distributed evenly
+1. **Imaginative Changes**: ✔ Fruits arranged on platter, ✔ Different varieties distributed evenly
 2. **Domain Knowledge**: ✔ Color balance achieved, ✔ Size hierarchy logical (large to small)
 3. **Plausibility Validation**: ✔ Arrangement practically achievable, ✘ Some fruits may roll off edges
 4. **Integration Assessment**: ✔ Visual harmony maintained, ✔ All fruits remain recognizable
@@ -866,7 +866,7 @@ Note: Keywords are domain-specific concepts that should be considered or applied
 ## Output Format
 {{
   "reasoning_process_score": X,
-  "reasoning": "1. Synthetic Changes 2. Domain Knowledge Check 3. Plausibility Validation 4. Integration Assessment"
+  "reasoning": "1. Imaginative Changes 2. Domain Knowledge Check 3. Plausibility Validation 4. Integration Assessment"
 }}
 """
 

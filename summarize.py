@@ -8,7 +8,7 @@ from collections import defaultdict
 
 # ROVER structure definitions
 ROVER_DIMENSIONS = ["science", "culture", "common_sense", "logic"]
-ROVER_REASONING_TYPES = ["temporal", "spatial", "quantitative", "causal", "synthetic", "logical", "mathematical", "abstract"] 
+ROVER_REASONING_TYPES = ["temporal", "spatial", "quantitative", "causal", "imaginative", "logical", "mathematical", "abstract"] 
 ROVER_METRICS = ["reasoning_process", "reasoning_visual", "reasoning_alignment", "visual_consistency", "image_quality"]
 
 # Score names for display

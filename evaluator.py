@@ -11,8 +11,8 @@ from prompts import (
     prompt_reasoning_visual_quantitative,
     prompt_reasoning_process_causal,
     prompt_reasoning_visual_causal,
-    prompt_reasoning_process_synthetic,
-    prompt_reasoning_visual_synthetic,
+    prompt_reasoning_process_imaginative,
+    prompt_reasoning_visual_imaginative,
     prompt_reasoning_process_logical,
     prompt_reasoning_visual_logical,
     prompt_reasoning_alignment,
@@ -52,9 +52,9 @@ REASONING_PROMPTS = {
         "process": prompt_reasoning_process_causal,
         "visual": prompt_reasoning_visual_causal,
     },
-    "synthetic": {
-        "process": prompt_reasoning_process_synthetic,
-        "visual": prompt_reasoning_visual_synthetic,
+    "imaginative": {
+        "process": prompt_reasoning_process_imaginative,
+        "visual": prompt_reasoning_visual_imaginative,
     },
     "logical": {
         "process": prompt_reasoning_process_logical,

@@ -1,6 +1,6 @@
 # ROVER Evaluation System
 
-A comprehensive evaluation framework for visual reasoning models using 5 core metrics across temporal, spatial, quantitative, causal, and synthetic reasoning tasks.
+A comprehensive evaluation framework for visual reasoning models using 5 core metrics across temporal, spatial, quantitative, causal, and imaginative reasoning tasks.
 
 ## Quick Start
 
@@ -128,7 +128,7 @@ your_gen_dir/
 - **Spatial**: Geometric transformations (rotation, perspective, positioning)  
 - **Quantitative**: Numerical changes (counting, scaling, proportions)
 - **Causal**: Cause-effect relationships (interventions, reactions)
-- **Synthetic**: Creative additions/modifications (style transfer, object addition)
+- **imaginative**: Creative additions/modifications (style transfer, object addition)
 
 ## Dimensions
 
@@ -154,7 +154,7 @@ python evaluate_rover.py [OPTIONS]
 --workers N                   Number of parallel workers (default: 10)
 --dimension {science,humanity,common_sense,logic}
                              Filter by dimension
---reasoning_type {temporal,spatial,quantitative,causal,synthetic}
+--reasoning_type {temporal,spatial,quantitative,causal,imaginative}
                              Filter by reasoning type
 --metrics METRIC [METRIC ...]
                              Specific metrics to evaluate
@@ -162,7 +162,7 @@ python evaluate_rover.py [OPTIONS]
 
 ## Data Source
 
-The evaluation uses the `cheryyunl/ROVER-Gen` dataset from Hugging Face, which is automatically downloaded. No manual data preparation needed.
+The evaluation uses the `cheryyunl/ROVER` dataset from Hugging Face, which is automatically downloaded. No manual data preparation needed.
 
 ## Architecture
 

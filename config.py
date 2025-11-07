@@ -41,7 +41,7 @@ AZURE_API_VERSION = os.getenv(
 # ROVER data paths
 ROVER_GEN_DIR = os.getenv(
     "ROVER_GEN_DIR",
-    "/Users/cheryunl/Documents/eval/gen_banana"
+    "./eval/gen_banana"
 )
 
 # Evaluation settings
@@ -66,7 +66,7 @@ Modify the default values in config.py
 Current Configuration:
 - API Key: {'Set' if OPENAI_API_KEY else 'Not Set'}
 - Model: {OPENAI_MODEL}
-- ROVER-GEN Directory: {ROVER_GEN_DIR}
+- ROVER Directory: {ROVER_GEN_DIR}
 - Max Retries: {MAX_RETRIES}
 
 Legacy Azure Support (Deprecated):

@@ -15,7 +15,7 @@ from evaluator import evaluate_images
 from config import ROVER_GEN_DIR
 
 # Hugging Face dataset
-DATASET_NAME = "cheryyunl/ROVER-Gen"
+DATASET_NAME = "cheryyunl/ROVER"
 
 METRICS = ["reasoning_process", "reasoning_visual", "reasoning_alignment", "visual_consistency", "image_quality"]
 
