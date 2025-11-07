@@ -16,6 +16,7 @@ from config import ROVER_GEN_DIR
 
 # Hugging Face dataset
 DATASET_NAME = "cheryyunl/ROVER"
+SUBSET_NAME = "ROVER-IG"
 
 METRICS = ["reasoning_process", "reasoning_visual", "reasoning_alignment", "visual_consistency", "image_quality"]
 
@@ -52,7 +53,7 @@ def process_task_evaluation(task, rover_data, metrics, api_key, output_jsonl_pat
 def load_huggingface_data():
     """Load data from Hugging Face dataset"""
     try:
-        dataset = load_dataset(DATASET_NAME)
+        dataset = load_dataset(DATASET_NAME, SUBSET_NAME)
         print(f"Loaded dataset {DATASET_NAME}")
         return dataset
     except Exception as e:
@@ -112,7 +113,7 @@ def run_rover_evaluation(
         metrics: List of metrics to evaluate
         api_key: OpenAI API key
         filter_dimension: Filter by dimension (science/humanity/common_sense/logic)
-        filter_reasoning_type: Filter by reasoning type (temporal/spatial/quantitative/causal/synthetic)
+        filter_reasoning_type: Filter by reasoning type (temporal/spatial/quantitative/causal/imaginative)
         force_reevaluate: Force re-evaluation of already evaluated tasks
         max_tasks: Maximum number of tasks to evaluate (None for all)
     """
@@ -217,7 +218,7 @@ if __name__ == "__main__":
     parser.add_argument("--metrics", nargs="+", choices=METRICS, default=METRICS, help="Metrics to evaluate")
     parser.add_argument("--api_key", type=str, help="[DEPRECATED] API key parameter - Azure credentials are configured in metric files")
     parser.add_argument("--dimension", type=str, choices=["science", "humanity", "common_sense", "logic"], help="Filter by dimension")
-    parser.add_argument("--reasoning_type", type=str, choices=["temporal", "spatial", "quantitative", "causal", "synthetic"], help="Filter by reasoning type")
+    parser.add_argument("--reasoning_type", type=str, choices=["temporal", "spatial", "quantitative", "causal", "imaginative"], help="Filter by reasoning type")
     parser.add_argument("--force_reevaluate", action="store_true", help="Force re-evaluation of already evaluated tasks")
     parser.add_argument("--max_tasks", type=int, help="Maximum number of tasks to evaluate (useful for testing)")
     
