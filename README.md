@@ -46,14 +46,14 @@ export OPENAI_MODEL="gpt-4o"
 **Option B: Edit config.py**
 ```python
 OPENAI_API_KEY = "your-api-key"
-OPENAI_MODEL = "gpt-4o"
+OPENAI_MODEL = "gpt-4.1"
 ```
 
 **Legacy Azure Support (Deprecated)**
 ```bash
 export AZURE_OPENAI_API_KEY="your-api-key"
 export AZURE_OPENAI_ENDPOINT="your-endpoint"
-export AZURE_OPENAI_DEPLOYMENT="gpt-4o"
+export AZURE_OPENAI_DEPLOYMENT="gpt-4.1"
 ```
 
 ### 2. Configure Data Path
