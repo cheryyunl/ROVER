@@ -1,18 +1,18 @@
 <div align="center">
 <h2>ROVER: Benchmarking Reciprocal Cross-Modal Reasoning for Omnimodal Generation</h2>
 
-[Yongyuan Liang](https://cheryyunl.github.io/)<sup>*</sup><sup>△</sup>&nbsp;
-[Wei Chow](https://scholar.google.com/citations?user=br7-IGkAAAAJ)<sup>*</sup><sup>▲</sup>&nbsp;
-[Feng Li](https://fengli-ust.github.io/)<sup>♦</sup>&nbsp;
-[Ziqiao Ma](https://mars-tin.github.io/)<sup>♣</sup>&nbsp;
-[Xiyao Wang](https://si0wang.github.io/)<sup>△</sup>&nbsp;
-[Jiageng Mao](https://pointscoder.github.io/)<sup>★</sup>&nbsp;
-[Jiuhai Chen](https://jiuhaichen.github.io/)<sup>△</sup>&nbsp;
-[Jiatao Gu](https://jiataogu.me/)<sup>▲</sup>&nbsp;
-[Yue Wang](https://yuewang.xyz/)<sup>†</sup><sup>★</sup>&nbsp;
-[Furong Huang](https://furong-huang.com/)<sup>†</sup><sup>△</sup>
+[Yongyuan Liang](https://cheryyunl.github.io/)&nbsp;
+[Wei Chow](https://scholar.google.com/citations?user=br7-IGkAAAAJ)&nbsp;
+[Feng Li](https://fengli-ust.github.io/)&nbsp;
+[Ziqiao Ma](https://mars-tin.github.io/)&nbsp;
+[Xiyao Wang](https://si0wang.github.io/)&nbsp;
+[Jiageng Mao](https://pointscoder.github.io/)&nbsp;
+[Jiuhai Chen](https://jiuhaichen.github.io/)&nbsp;
 
-<sup>*</sup> Equal contribution  <sup>†</sup> Corresponding authors
+[Jiatao Gu](https://jiataogu.me/)&nbsp;
+[Yue Wang](https://yuewang.xyz/)&nbsp;
+[Furong Huang](https://furong-huang.com/)
+
 
 <h4>
 <a href="https://arxiv.org/abs/2511.01163">📄 arXiv Paper</a> &nbsp; 
