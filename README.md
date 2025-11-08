@@ -1,6 +1,30 @@
-# ROVER Evaluation System
+<div align="center">
+<h2>ROVER: Benchmarking Reciprocal Cross-Modal Reasoning for Omnimodal Generation</h2>
 
-A comprehensive evaluation framework for visual reasoning models using 5 core metrics across temporal, spatial, quantitative, causal, and imaginative reasoning tasks.
+[Yongyuan Liang](https://cheryyunl.github.io/)<sup>*</sup><sup>△</sup>&nbsp;
+[Wei Chow](https://scholar.google.com/citations?user=br7-IGkAAAAJ)<sup>*</sup><sup>▲</sup>&nbsp;
+[Feng Li](https://fengli-ust.github.io/)<sup>♦</sup>&nbsp;
+[Ziqiao Ma](https://mars-tin.github.io/)<sup>♣</sup>&nbsp;
+[Xiyao Wang](https://si0wang.github.io/)<sup>△</sup>&nbsp;
+[Jiageng Mao](https://pointscoder.github.io/)<sup>★</sup>&nbsp;
+[Jiuhai Chen](https://jiuhaichen.github.io/)<sup>△</sup>&nbsp;
+[Jiatao Gu](https://jiataogu.me/)<sup>▲</sup>&nbsp;
+[Yue Wang](https://yuewang.xyz/)<sup>†</sup><sup>★</sup>&nbsp;
+[Furong Huang](https://furong-huang.com/)<sup>†</sup><sup>△</sup>
+
+<sup>*</sup> Equal contribution  <sup>†</sup> Corresponding authors
+
+<h4>
+<a href="https://arxiv.org/abs/2511.01163">📄 arXiv Paper</a> &nbsp; 
+<a href="https://huggingface.co/datasets/cheryyunl/ROVER">🤗 Hugging Face Dataset</a>
+</h4>
+
+</div>
+
+## :bookmark_tabs: Todos
+We will be releasing the following contents:
+- [ ] Evaluation for ROVER-TG
+- [ ] Inference code
 
 ## Quick Start
 
@@ -132,8 +156,8 @@ your_gen_dir/
 
 ## Dimensions
 
-- **Science**: Physics, chemistry, biology principles
-- **Humanity**: Cultural, historical, social contexts
+- **Natural Science**: Physics, chemistry, biology principles
+- **Culture**: Cultural, historical, social contexts
 - **Common Sense**: Everyday knowledge and practical understanding
 - **Logic**: Mathematical and formal reasoning
 
@@ -152,7 +176,7 @@ python evaluate_rover.py [OPTIONS]
 
 --output_dir DIR              Output directory (default: rover_results)
 --workers N                   Number of parallel workers (default: 10)
---dimension {science,humanity,common_sense,logic}
+--dimension {science,culture,common_sense,logic}
                              Filter by dimension
 --reasoning_type {temporal,spatial,quantitative,causal,imaginative}
                              Filter by reasoning type
@@ -193,3 +217,16 @@ The evaluation system uses a unified architecture:
 2. **API errors** → Verify OpenAI credentials in `config.py`
 3. **Low RP/RA scores** → Normal if reasoning text files (.txt) are missing
 4. **Dataset loading fails** → Check internet connection for Hugging Face access
+
+## Citation
+
+If you use this benchmark in your research, please consider citing:
+
+```bibtex
+@article{liang2025rover,
+  title={ROVER: Benchmarking Reciprocal Cross-Modal Reasoning for Omnimodal Generation},
+  author={Liang, Yongyuan and Chow, Wei and Li, Feng and Ma, Ziqiao and Wang, Xiyao and Mao, Jiageng and Chen, Jiuhai and Gu, Jiatao and Wang, Yue and Huang, Furong},
+  journal={arXiv preprint arXiv:2511.01163},
+  year={2025}
+}
+```
