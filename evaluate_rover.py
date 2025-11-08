@@ -81,7 +81,6 @@ def convert_hf_to_rover_format(dataset):
         
         task = {
             'id': item.get('id'),
-            'image_file': item.get('image_file'),
             'dimension': dimension,  # Convert index to name
             'reasoning_type': item.get('reasoning_type'),
             'prompt': item.get('prompt'),
@@ -112,7 +111,7 @@ def run_rover_evaluation(
         num_workers: Number of parallel workers
         metrics: List of metrics to evaluate
         api_key: OpenAI API key
-        filter_dimension: Filter by dimension (science/humanity/common_sense/logic)
+        filter_dimension: Filter by dimension (science/culture/common_sense/logic)
         filter_reasoning_type: Filter by reasoning type (temporal/spatial/quantitative/causal/imaginative)
         force_reevaluate: Force re-evaluation of already evaluated tasks
         max_tasks: Maximum number of tasks to evaluate (None for all)
@@ -217,7 +216,7 @@ if __name__ == "__main__":
     parser.add_argument("--workers", type=int, default=10, help="Number of worker threads")
     parser.add_argument("--metrics", nargs="+", choices=METRICS, default=METRICS, help="Metrics to evaluate")
     parser.add_argument("--api_key", type=str, help="[DEPRECATED] API key parameter - Azure credentials are configured in metric files")
-    parser.add_argument("--dimension", type=str, choices=["science", "humanity", "common_sense", "logic"], help="Filter by dimension")
+    parser.add_argument("--dimension", type=str, choices=["science", "culture", "common_sense", "logic"], help="Filter by dimension")
     parser.add_argument("--reasoning_type", type=str, choices=["temporal", "spatial", "quantitative", "causal", "imaginative"], help="Filter by reasoning type")
     parser.add_argument("--force_reevaluate", action="store_true", help="Force re-evaluation of already evaluated tasks")
     parser.add_argument("--max_tasks", type=int, help="Maximum number of tasks to evaluate (useful for testing)")
