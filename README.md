@@ -40,13 +40,13 @@ Configure your OpenAI credentials (choose one):
 **Option A: Environment Variables (Recommended)**
 ```bash
 export OPENAI_API_KEY="your-api-key"
-export OPENAI_MODEL="gpt-4o"
+export OPENAI_MODEL="gpt-4.1"
 ```
 
 **Option B: Edit config.py**
 ```python
 OPENAI_API_KEY = "your-api-key"
-OPENAI_MODEL = "gpt-4o"
+OPENAI_MODEL = "gpt-4.1"
 ```
 
 ### 2. Configure Data Path
