@@ -1,4 +1,4 @@
-# Copyright (c) 2025 ROVER Team
+# Copyright (c) 2025 VortexBench Team
 # SPDX-License-Identifier: Apache-2.0
 
 import os
@@ -12,13 +12,13 @@ from datasets import load_dataset
 
 # Import unified evaluator and config
 from evaluator import evaluate_images
-from config import ROVER_GEN_DIR
+from config import VORTEX_GEN_DIR
 
 # Hugging Face dataset
 DATASET_NAME = "cheryyunl/ROVER"
-SUBSET_NAME = "ROVER-IG"
+SUBSET_NAME = "ROVER-TG"
 
-METRICS = ["reasoning_process", "reasoning_visual", "reasoning_alignment", "visual_consistency", "image_quality"]
+METRICS = ["interleaved_reasoning", "reasoning_alignment"]
 
 
 def save_result_jsonl(result, key, output_jsonl_path):
@@ -54,7 +54,7 @@ def load_huggingface_data():
     """Load data from Hugging Face dataset"""
     try:
         dataset = load_dataset(DATASET_NAME, SUBSET_NAME)
-        print(f"Loaded dataset {DATASET_NAME}")
+        print(f"Loaded dataset {DATASET_NAME} - {SUBSET_NAME}")
         return dataset
     except Exception as e:
         logging.error(f"Error loading Hugging Face dataset {DATASET_NAME}: {e}")
@@ -64,30 +64,25 @@ def convert_hf_to_rover_format(dataset):
     """Convert Hugging Face dataset to ROVER format"""
     tasks = []
     
-    # Get the train split
+    # Get the train split (or whatever split exists)
     split_data = dataset['train'] if 'train' in dataset else dataset
     
-    # Get dimension labels mapping
-    dimension_names = split_data.features['dimension'].names
-    
     for item in split_data:
-        # Extract and process fields
-        keywords = item.get('keywords', '')  # This is already a string
-        target_description = item.get('target_description', '')
+        # Handle both 'reasoning_image' and 'refer_image' field names
+        reasoning_image = item.get('reasoning_image') or item.get('refer_image')
         
-        # Convert dimension index to name
-        dimension_idx = item.get('dimension')
-        dimension = dimension_names[dimension_idx] if dimension_idx is not None else 'unknown'
+        # Keep original problem_type for fine-grained prompt selection
+        # Types: physical, embodied, logical, jigsaw, multi-view
+        problem_type = item.get('problem_type', '')
         
         task = {
             'id': item.get('id'),
-            'dimension': dimension,  # Convert index to name
-            'reasoning_type': item.get('reasoning_type'),
+            'image': item.get('image'),  # PIL Image object (original problem image)
+            'image2': item.get('image2'),  # PIL Image object (optional second image)
+            'problem_type': problem_type,  # physical/embodied/logical/jigsaw/multi-view
             'prompt': item.get('prompt'),
-            'target_description': target_description,
-            'keywords': keywords,  # Already a string
-            'image': item.get('image'),  # PIL Image object
-            'target_image': item.get('target_image'),  # PIL Image object (if exists)
+            'reasoning_image': reasoning_image,  # PIL Image object (GT reasoning visualization)
+            'answer': item.get('answer'),  # Ground truth answer (can be string or list)
         }
         tasks.append(task)
     
@@ -98,8 +93,7 @@ def run_rover_evaluation(
     num_workers=10,
     metrics=None,
     api_key=None,
-    filter_dimension=None,
-    filter_reasoning_type=None,
+    filter_problem_type=None,
     force_reevaluate=False,
     max_tasks=None
 ):
@@ -111,8 +105,7 @@ def run_rover_evaluation(
         num_workers: Number of parallel workers
         metrics: List of metrics to evaluate
         api_key: OpenAI API key
-        filter_dimension: Filter by dimension (science/culture/common_sense/logic)
-        filter_reasoning_type: Filter by reasoning type (temporal/spatial/quantitative/causal/imaginative)
+        filter_problem_type: Filter by problem type (physical/logical/perception)
         force_reevaluate: Force re-evaluation of already evaluated tasks
         max_tasks: Maximum number of tasks to evaluate (None for all)
     """
@@ -132,10 +125,8 @@ def run_rover_evaluation(
     
     # Filter tasks
     tasks = rover_data["tasks"]
-    if filter_dimension:
-        tasks = [t for t in tasks if t.get("dimension") == filter_dimension]
-    if filter_reasoning_type:
-        tasks = [t for t in tasks if t.get("reasoning_type") == filter_reasoning_type]
+    if filter_problem_type:
+        tasks = [t for t in tasks if t.get("problem_type") == filter_problem_type]
     
     print(f"Found {len(tasks)} tasks to evaluate")
     
@@ -157,7 +148,7 @@ def run_rover_evaluation(
     
     for task in tasks:
         task_id = task["id"]
-        gen_image_path = os.path.join(ROVER_GEN_DIR, f"gen_{task_id}.png")
+        gen_image_path = os.path.join(VORTEX_GEN_DIR, f"gen_{task_id}.png")
         
         if os.path.exists(gen_image_path):
             if task_id not in already_evaluated or force_reevaluate:
@@ -195,7 +186,7 @@ def run_rover_evaluation(
         successful = 0
         failed = 0
         
-        for future in tqdm(as_completed(futures), total=len(futures), desc="Evaluating ROVER"):
+        for future in tqdm(as_completed(futures), total=len(futures), desc="Evaluating VortexBench"):
             try:
                 success = future.result()
                 if success:
@@ -215,9 +206,8 @@ if __name__ == "__main__":
     parser.add_argument("--output_dir", type=str, default="rover_results", help="Output directory")
     parser.add_argument("--workers", type=int, default=10, help="Number of worker threads")
     parser.add_argument("--metrics", nargs="+", choices=METRICS, default=METRICS, help="Metrics to evaluate")
-    parser.add_argument("--api_key", type=str, help="[DEPRECATED] API key parameter - Azure credentials are configured in metric files")
-    parser.add_argument("--dimension", type=str, choices=["science", "culture", "common_sense", "logic"], help="Filter by dimension")
-    parser.add_argument("--reasoning_type", type=str, choices=["temporal", "spatial", "quantitative", "causal", "imaginative"], help="Filter by reasoning type")
+    parser.add_argument("--api_key", type=str, help="[DEPRECATED] API key parameter - credentials are configured in config.py")
+    parser.add_argument("--problem_type", type=str, choices=["physical", "embodied", "logical", "jigsaw", "multi-view"], help="Filter by problem type")
     parser.add_argument("--force_reevaluate", action="store_true", help="Force re-evaluation of already evaluated tasks")
     parser.add_argument("--max_tasks", type=int, help="Maximum number of tasks to evaluate (useful for testing)")
     
@@ -226,18 +216,17 @@ if __name__ == "__main__":
     # Setup logging
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
     
-    # API key handling (deprecated - now configured in metric files)
+    # API key handling (deprecated - now configured in config.py)
     api_key = args.api_key
     if api_key:
-        print("Warning: --api_key parameter is deprecated. Azure credentials are configured in metric files.")
+        print("Warning: --api_key parameter is deprecated. Credentials are configured in config.py")
     
     run_rover_evaluation(
         output_dir=args.output_dir,
         num_workers=args.workers,
         metrics=args.metrics,
         api_key=api_key,
-        filter_dimension=args.dimension,
-        filter_reasoning_type=args.reasoning_type,
+        filter_problem_type=args.problem_type,
         force_reevaluate=args.force_reevaluate,
         max_tasks=args.max_tasks
     )

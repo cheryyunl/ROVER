@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Configuration file for ROVER evaluation
+Configuration file for VortexBench evaluation
 """
 
 import os
@@ -25,29 +25,34 @@ AZURE_API_KEY = os.getenv(
 
 AZURE_ENDPOINT = os.getenv(
     "AZURE_OPENAI_ENDPOINT",
-    "https://dil-nu-openai-eastus.openai.azure.com"
+    "https://your-resource-name.openai.azure.com/"
 )
 
 AZURE_DEPLOYMENT_NAME = os.getenv(
     "AZURE_OPENAI_DEPLOYMENT",
-    "gpt-4o"
+    "gpt-4.1"
 )
 
 AZURE_API_VERSION = os.getenv(
     "AZURE_OPENAI_API_VERSION", 
-    "2024-08-01-preview"
+    "2024-12-01-preview"
 )
 
 # ROVER data paths
-ROVER_GEN_DIR = os.getenv(
-    "ROVER_GEN_DIR",
-    "./eval/gen_banana"
+VORTEX_GEN_DIR = os.getenv(
+    "VORTEX_GEN_DIR",
+    "/code/gen_banana_gtr"
 )
 
 # Evaluation settings
 MAX_RETRIES = int(os.getenv(
     "MAX_RETRIES",
     "3"
+))
+
+MAX_TOKENS = int(os.getenv(
+    "MAX_TOKENS",
+    "10000"  # Default: 40000 tokens for o3 (use 3000 for GPT-4o)
 ))
 
 # Instructions for users
@@ -66,8 +71,9 @@ Modify the default values in config.py
 Current Configuration:
 - API Key: {'Set' if OPENAI_API_KEY else 'Not Set'}
 - Model: {OPENAI_MODEL}
-- ROVER Directory: {ROVER_GEN_DIR}
+- VortexGen Directory: {VORTEX_GEN_DIR}
 - Max Retries: {MAX_RETRIES}
+- Max Tokens: {MAX_TOKENS}
 
 Legacy Azure Support (Deprecated):
 - Azure API Key: {'Set' if AZURE_API_KEY else 'Not Set'}

@@ -1,4 +1,4 @@
-# Copyright (c) 2025 ROVER Team
+# Copyright (c) 2025 VortexBench Team
 # SPDX-License-Identifier: Apache-2.0
 
 import os
@@ -13,7 +13,7 @@ from openai import AzureOpenAI
 import threading
 
 # Import configuration
-from config import OPENAI_API_KEY, OPENAI_MODEL, AZURE_API_KEY, AZURE_ENDPOINT, AZURE_DEPLOYMENT_NAME, AZURE_API_VERSION, ROVER_GEN_DIR
+from config import OPENAI_API_KEY, OPENAI_MODEL, AZURE_API_KEY, AZURE_ENDPOINT, AZURE_DEPLOYMENT_NAME, AZURE_API_VERSION, VORTEX_GEN_DIR, MAX_TOKENS
 
 # Thread-safe file writing lock
 lock = threading.Lock()
@@ -35,8 +35,8 @@ else:
     )
     model_name = AZURE_DEPLOYMENT_NAME
 
-# Define metrics for all reasoning types
-METRICS = ["reasoning_process", "reasoning_visual", "reasoning_alignment", "visual_consistency", "image_quality"]
+# Define metrics for ROVER evaluation
+METRICS = ["interleaved_reasoning", "reasoning_alignment"]
 
 def save_result_jsonl(result, key, output_jsonl_path):
     """Save evaluation result to JSONL file with thread lock"""
@@ -73,20 +73,11 @@ def load_processed_keys_with_missing_metrics(jsonl_path, metrics, expected_keys_
                 missing_metrics = []
                 for metric in metrics:
                     # Check if this metric has valid scores
-                    if metric == "reasoning_process":
-                        if f"reasoning_process_score" not in key_results[key] or key_results[key][f"reasoning_process_score"] is None:
-                            missing_metrics.append(metric)
-                    elif metric == "reasoning_visual":
-                        if f"reasoning_visual_score" not in key_results[key] or key_results[key][f"reasoning_visual_score"] is None:
+                    if metric == "interleaved_reasoning":
+                        if f"interleaved_reasoning_score" not in key_results[key] or key_results[key][f"interleaved_reasoning_score"] is None:
                             missing_metrics.append(metric)
                     elif metric == "reasoning_alignment":
                         if f"reasoning_alignment_score" not in key_results[key] or key_results[key][f"reasoning_alignment_score"] is None:
-                            missing_metrics.append(metric)
-                    elif metric == "visual_consistency":
-                        if f"visual_consistency_score" not in key_results[key] or key_results[key][f"visual_consistency_score"] is None:
-                            missing_metrics.append(metric)
-                    elif metric == "image_quality":
-                        if f"image_quality_score" not in key_results[key] or key_results[key][f"image_quality_score"] is None:
                             missing_metrics.append(metric)
                 
                 if missing_metrics:
@@ -148,12 +139,21 @@ def evaluate_with_gpt(prompt, original_base64=None, edited_base64=None, target_b
 
     for attempt in range(max_retries):
         try:
-            response = openai_client.chat.completions.create(
-                model=model_name,
-                messages=messages,
-                max_tokens=3000,
-                temperature=0.0,
-            )
+            # o3 models use max_completion_tokens instead of max_tokens
+            # Check if model is o3/o3-mini
+            if 'o3' in model_name.lower():
+                response = openai_client.chat.completions.create(
+                    model=model_name,
+                    messages=messages,
+                    max_completion_tokens=MAX_TOKENS,
+                )
+            else:
+                response = openai_client.chat.completions.create(
+                    model=model_name,
+                    messages=messages,
+                    max_tokens=MAX_TOKENS,
+                    temperature=0.0,
+                )
             
             content = response.choices[0].message.content
             if content and content.strip():
@@ -258,6 +258,13 @@ def extract_score_and_reason(response, score_key, reason_fields, prefix_patterns
         r"rating\s*[:：]?\s*([1-5])",
         r"([1-5])\s+points?",           # "4 points"
         r"([1-5])\s+stars?",            # "4 stars"
+        r"([1-5])\s*$",                 # "4" at end of line
+        r"^([1-5])\s*",                 # "4" at start of line
+        r"([1-5])\s*\.",                # "4." 
+        r"([1-5])\s*,",                 # "4,"
+        r"([1-5])\s*\)",                # "4)"
+        r"([1-5])\s*\]",                # "4]"
+        r"([1-5])\s*}",                 # "4}"
     ]
     if prefix_patterns:
         patterns = prefix_patterns + patterns
@@ -278,7 +285,8 @@ def extract_score_and_reason(response, score_key, reason_fields, prefix_patterns
             logging.debug(f"Strategy 4 pattern {i+1} failed: {pat}")
     
     if score is None:
-        logging.debug("All 4 strategies failed to extract score")
+        logging.warning(f"All 4 strategies failed to extract score from response: {response[:500]}...")
+        logging.warning(f"Looking for score_key: '{score_key}' in response")
     
     # Extract reasoning with multiple patterns
     reason_patterns = [
@@ -299,17 +307,17 @@ def extract_score_and_reason(response, score_key, reason_fields, prefix_patterns
     
     return score, reason
 
-def get_task_data(rover_data, image_id):
+def get_task_data(vortex_data, image_id):
     """Get task data for a specific image ID"""
-    for task in rover_data["tasks"]:
+    for task in vortex_data["tasks"]:
         if task["id"] == image_id:
             return task
     return None
 
 def get_image_paths(image_id):
     """Get file paths for generated image and think output"""
-    generated_path = os.path.join(ROVER_GEN_DIR, f"gen_{image_id}.png")
-    think_path = os.path.join(ROVER_GEN_DIR, f"gen_{image_id}.txt")
+    generated_path = os.path.join(VORTEX_GEN_DIR, f"gen_{image_id}.png")
+    think_path = os.path.join(VORTEX_GEN_DIR, f"gen_{image_id}.txt")
     return generated_path, think_path
 
 def load_think_output(think_path):
@@ -367,22 +375,34 @@ def evaluate_metric_with_retry(metric_name, prompt_text, orig_b64, gen_b64=None,
     
     return score, reason
 
-def evaluate_reasoning_process(prompt_text, orig_b64, max_retries=3):
-    """Evaluate reasoning process metric"""
-    return evaluate_metric_with_retry("reasoning_process", prompt_text, orig_b64, max_retries=max_retries)
+def evaluate_interleaved_reasoning(prompt_text, image1_b64, image2_b64, image3_b64=None, max_retries=3):
+    """Evaluate visual reasoning metric
+    
+    Args:
+        prompt_text: Formatted evaluation prompt
+        image1_b64: Base64 encoded first image (GT reasoning for physical/perception, problem image for logical)
+        image2_b64: Base64 encoded second image (generated image for physical/perception, GT reasoning for logical)
+        image3_b64: Base64 encoded third image (None for physical/perception, generated image for logical)
+        max_retries: Number of retry attempts
+    
+    Returns:
+        tuple: (score, reason)
+    """
+    return evaluate_metric_with_retry("interleaved_reasoning", prompt_text, image1_b64, image2_b64, image3_b64, max_retries=max_retries)
 
-def evaluate_reasoning_visual(prompt_text, orig_b64, gen_b64, target_b64=None, max_retries=3):
-    """Evaluate reasoning visual metric"""
-    return evaluate_metric_with_retry("reasoning_visual", prompt_text, orig_b64, gen_b64, target_b64, max_retries=max_retries)
-
-def evaluate_reasoning_alignment(prompt_text, orig_b64, gen_b64, max_retries=3):
-    """Evaluate reasoning alignment metric"""
-    return evaluate_metric_with_retry("reasoning_alignment", prompt_text, orig_b64, gen_b64, max_retries=max_retries)
-
-def evaluate_visual_consistency(prompt_text, orig_b64, gen_b64, max_retries=3):
-    """Evaluate visual consistency metric"""
-    return evaluate_metric_with_retry("visual_consistency", prompt_text, orig_b64, gen_b64, max_retries=max_retries)
-
-def evaluate_image_quality(prompt_text, gen_b64, max_retries=3):
-    """Evaluate image quality metric"""
-    return evaluate_metric_with_retry("image_quality", prompt_text, None, gen_b64, max_retries=max_retries)
+def evaluate_reasoning_alignment(prompt_text, image1_b64, image2_b64=None, image3_b64=None, max_retries=3):
+    """Evaluate reasoning alignment metric
+    
+    Evaluates alignment between the problem prompt, generated image, and model's answer text.
+    
+    Args:
+        prompt_text: Formatted evaluation prompt (includes problem prompt and model answer)
+        image1_b64: Base64 encoded first image (generated for physical/embodied/logical, original for perception)
+        image2_b64: Base64 encoded second image (optional)
+        image3_b64: Base64 encoded third image (optional, for perception_next)
+        max_retries: Number of retry attempts
+    
+    Returns:
+        tuple: (score, reason)
+    """
+    return evaluate_metric_with_retry("reasoning_alignment", prompt_text, image1_b64, image2_b64, image3_b64, max_retries=max_retries)
