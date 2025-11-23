@@ -23,7 +23,7 @@
 
 ## :bookmark_tabs: Todos
 We will be releasing the following contents:
-- [ ] Evaluation for ROVER-TG
+- [x] Evaluation for ROVER-TG (Please switch to branch `ROVER-TG`. Note: This feature is currently under beta testing.)
 - [ ] Inference code
 
 ## Quick Start
