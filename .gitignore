@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.DS_Store
+.env
+venv/
+env/
+gen_banana_tg/
+gen_gpt_tg/
+gen_nano_banana/
+gen_gpt/
+output/
