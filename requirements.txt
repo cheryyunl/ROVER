@@ -2,3 +2,4 @@ datasets
 tqdm
 openai
 pillow
+google-genai
